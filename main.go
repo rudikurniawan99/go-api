@@ -12,6 +12,8 @@ func main() {
 	godotenv.Load()
 
 	loadOnce.Do(func() {
-		src.Init()
+		server := src.Init()
+		server.Run()
 	})
+
 }

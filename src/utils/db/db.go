@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/rudikurniawan99/go-api/src/model"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -20,6 +22,7 @@ func Connect() *gorm.DB {
 		os.Getenv("GORM_DB_TIMEZONE"),
 	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db.AutoMigrate(&model.Blog{})
 
 	if err != nil {
 		log.Println("==== DB ====")
