@@ -22,7 +22,7 @@ func Connect() *gorm.DB {
 		os.Getenv("GORM_DB_TIMEZONE"),
 	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	db.AutoMigrate(&model.Blog{})
+	db.AutoMigrate(&model.Blog{}, &model.Author{})
 
 	if err != nil {
 		log.Println("==== DB ====")

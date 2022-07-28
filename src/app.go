@@ -1,8 +1,12 @@
 package src
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
+	"github.com/rudikurniawan99/go-api/helper"
 	"github.com/rudikurniawan99/go-api/src/delivery"
+	"github.com/rudikurniawan99/go-api/src/model"
 	"github.com/rudikurniawan99/go-api/src/repository"
 	"github.com/rudikurniawan99/go-api/src/usecase"
 	"github.com/rudikurniawan99/go-api/src/utils/db"
@@ -36,6 +40,32 @@ func (s *server) Run() {
 	blogDelivery := delivery.NewDelivery(blogUsecase)
 	authGroup := s.httpServer.Group("blog")
 	blogDelivery.Mount(authGroup)
+
+	// - author
+	// authorRepository := repository.AuthorRepository{
+	// 	db: s.database,
+	// }
+	authorRepository := repository.NewAuthorRepository(s.database)
+	authorUsecase := usecase.NewAuthorUsecase(authorRepository)
+
+	s.httpServer.POST("author", func(c *gin.Context) {
+		name := c.PostForm("name")
+		age, _ := strconv.Atoi(c.PostForm("age"))
+
+		author := &model.Author{
+			Name: name,
+			Age:  age,
+		}
+
+		err := authorUsecase.CreateData(author)
+
+		if err != nil {
+			helper.JsonError(c, err)
+			return
+		}
+
+		helper.JsonSUCCESS(c, author)
+	})
 
 	s.httpServer.Run(":8082")
 }
