@@ -23,7 +23,7 @@ func (r *blogRepository) Create(blog *model.Blog) error {
 }
 
 func (r *blogRepository) GetAll(blog *[]model.Blog) error {
-	err := r.db.Find(blog).Error
+	err := r.db.Find(blog, 10).Error
 
 	if err != nil {
 		return err
