@@ -1,11 +1,10 @@
 package src
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
-	"github.com/rudikurniawan99/go-api/src/model"
+	"github.com/rudikurniawan99/go-api/src/delivery"
 	"github.com/rudikurniawan99/go-api/src/repository"
+	"github.com/rudikurniawan99/go-api/src/usecase"
 	"github.com/rudikurniawan99/go-api/src/utils/db"
 	"gorm.io/gorm"
 )
@@ -33,36 +32,10 @@ func (s *server) Run() {
 
 	// -
 	blogRepository := repository.NewRepository(s.database)
-
-	s.httpServer.POST("blog", func(c *gin.Context) {
-		title := c.PostForm("title")
-		description := c.PostForm("description")
-
-		blog := &model.Blog{
-			Title:       title,
-			Description: description,
-		}
-
-		blogRepository.Create(blog)
-
-		c.JSON(http.StatusOK, gin.H{
-			"success": true,
-			"message": "get all data",
-			"data":    blog,
-		})
-	})
-
-	s.httpServer.GET("blog", func(c *gin.Context) {
-		blogs := &[]model.Blog{}
-
-		blogRepository.GetAll(blogs)
-
-		c.JSON(http.StatusOK, gin.H{
-			"success": true,
-			"message": "get all data",
-			"data":    blogs,
-		})
-	})
+	blogUsecase := usecase.NewBlogUsecase(blogRepository)
+	blogDelivery := delivery.NewDelivery(blogUsecase)
+	authGroup := s.httpServer.Group("blog")
+	blogDelivery.Mount(authGroup)
 
 	s.httpServer.Run(":8082")
 }

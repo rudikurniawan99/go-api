@@ -1,6 +1,9 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
 
 type (
 	Blog struct {
@@ -12,5 +15,14 @@ type (
 	BlogRepository interface {
 		Create(blog *Blog) error
 		GetAll(blog *[]Blog) error
+	}
+
+	BlogUsecase interface {
+		Create(blog *Blog) error
+		FetchAll(blog *[]Blog) error
+	}
+
+	BlogDelivery interface {
+		Mount(group *gin.RouterGroup)
 	}
 )
