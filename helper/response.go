@@ -30,10 +30,12 @@ func JsonSUCCESS(c *gin.Context, data interface{}) {
 }
 
 func JsonError(c *gin.Context, err error) {
+	data := []string{}
+
 	res := jsonError{
 		Message: err.Error(),
 		Status:  "failed",
-		Data:    nil,
+		Data:    data,
 	}
 
 	c.JSON(http.StatusBadRequest, res)

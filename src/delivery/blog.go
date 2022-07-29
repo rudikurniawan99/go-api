@@ -7,12 +7,12 @@ import (
 )
 
 type blogDelivery struct {
-	u model.BlogUsecase
+	blogUseCase model.BlogUsecase
 }
 
 func NewDelivery(bu model.BlogUsecase) model.BlogDelivery {
 	return &blogDelivery{
-		u: bu,
+		blogUseCase: bu,
 	}
 }
 
@@ -24,7 +24,7 @@ func (d *blogDelivery) Mount(group *gin.RouterGroup) {
 func (d *blogDelivery) GetAllBlogHandler(c *gin.Context) {
 	blogs := &[]model.Blog{}
 
-	err := d.u.FetchAll(blogs)
+	err := d.blogUseCase.FetchAll(blogs)
 
 	if err != nil {
 		helper.JsonError(c, err)
@@ -43,7 +43,7 @@ func (d *blogDelivery) CreateHandler(c *gin.Context) {
 		Description: desc,
 	}
 
-	err := d.u.Create(blog)
+	err := d.blogUseCase.Create(blog)
 
 	if err != nil {
 		helper.JsonError(c, err)

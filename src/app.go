@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rudikurniawan99/go-api/helper"
-	"github.com/rudikurniawan99/go-api/src/delivery"
+	"github.com/rudikurniawan99/go-api/registry"
 	"github.com/rudikurniawan99/go-api/src/model"
 	"github.com/rudikurniawan99/go-api/src/repository"
 	"github.com/rudikurniawan99/go-api/src/usecase"
@@ -35,16 +35,10 @@ func (s *server) Run() {
 	})
 
 	// -
-	blogRepository := repository.NewRepository(s.database)
-	blogUsecase := usecase.NewBlogUsecase(blogRepository)
-	blogDelivery := delivery.NewDelivery(blogUsecase)
+	blogDelivery := registry.BlogDelivery(s.database)
 	authGroup := s.httpServer.Group("blog")
 	blogDelivery.Mount(authGroup)
 
-	// - author
-	// authorRepository := repository.AuthorRepository{
-	// 	db: s.database,
-	// }
 	authorRepository := repository.NewAuthorRepository(s.database)
 	authorUsecase := usecase.NewAuthorUsecase(authorRepository)
 
