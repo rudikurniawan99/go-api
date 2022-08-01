@@ -1,14 +1,8 @@
 package src
 
 import (
-	"strconv"
-
 	"github.com/gin-gonic/gin"
-	"github.com/rudikurniawan99/go-api/helper"
 	"github.com/rudikurniawan99/go-api/registry"
-	"github.com/rudikurniawan99/go-api/src/model"
-	"github.com/rudikurniawan99/go-api/src/repository"
-	"github.com/rudikurniawan99/go-api/src/usecase"
 	"github.com/rudikurniawan99/go-api/src/utils/db"
 	"gorm.io/gorm"
 )
@@ -36,30 +30,12 @@ func (s *server) Run() {
 
 	// -
 	blogDelivery := registry.BlogDelivery(s.database)
-	authGroup := s.httpServer.Group("blog")
-	blogDelivery.Mount(authGroup)
+	blogGroup := s.httpServer.Group("blog")
+	blogDelivery.Mount(blogGroup)
 
-	authorRepository := repository.NewAuthorRepository(s.database)
-	authorUsecase := usecase.NewAuthorUsecase(authorRepository)
-
-	s.httpServer.POST("author", func(c *gin.Context) {
-		name := c.PostForm("name")
-		age, _ := strconv.Atoi(c.PostForm("age"))
-
-		author := &model.Author{
-			Name: name,
-			Age:  age,
-		}
-
-		err := authorUsecase.CreateData(author)
-
-		if err != nil {
-			helper.JsonError(c, err)
-			return
-		}
-
-		helper.JsonSUCCESS(c, author)
-	})
+	authorDelivery := registry.AuthorDelivery(s.database)
+	authorGroup := s.httpServer.Group("author")
+	authorDelivery.Mount(authorGroup)
 
 	s.httpServer.Run(":8082")
 }

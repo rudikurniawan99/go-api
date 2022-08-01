@@ -14,3 +14,12 @@ func BlogDelivery(db *gorm.DB) model.BlogDelivery {
 	blogDelivery := delivery.NewDelivery(blogUsecase)
 	return blogDelivery
 }
+
+func AuthorDelivery(db *gorm.DB) model.AuthorDelivery {
+
+	authorRepository := repository.NewAuthorRepository(db)
+	authorUsecase := usecase.NewAuthorUsecase(authorRepository)
+	authorDelivery := delivery.NewAuthorDelivery(authorUsecase)
+
+	return authorDelivery
+}

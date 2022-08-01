@@ -5,17 +5,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type AuthorRepository struct {
+type authorRepository struct {
 	db *gorm.DB
 }
 
-func NewAuthorRepository(database *gorm.DB) *AuthorRepository {
-	return &AuthorRepository{
+func NewAuthorRepository(database *gorm.DB) model.AuthorRepository {
+	return &authorRepository{
 		db: database,
 	}
 }
 
-func (r *AuthorRepository) Create(author *model.Author) error {
+func (r *authorRepository) Create(author *model.Author) error {
 	err := r.db.Create(author).Error
 
 	if err != nil {
